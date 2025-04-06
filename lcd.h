@@ -7,23 +7,23 @@
 #define u8 uint8_t
 #define u32 uint32_t
 
-#define LCD_SCL_GPIO_PORT				GPIOA
-#define LCD_SCL_GPIO_PIN				GPIO_Pin_0
+#define LCD_SCL_GPIO_PORT				GPIOD
+#define LCD_SCL_GPIO_PIN				GPIO_Pin_2
 				
-#define LCD_SDA_GPIO_PORT				GPIOA
-#define LCD_SDA_GPIO_PIN				GPIO_Pin_1
+#define LCD_SDA_GPIO_PORT				GPIOD
+#define LCD_SDA_GPIO_PIN				GPIO_Pin_3
 				
-#define LCD_RST_GPIO_PORT				GPIOA
-#define LCD_RST_GPIO_PIN				GPIO_Pin_2
+#define LCD_RST_GPIO_PORT				GPIOD
+#define LCD_RST_GPIO_PIN				GPIO_Pin_4
 				
-#define LCD_DC_GPIO_PORT				GPIOA
-#define LCD_DC_GPIO_PIN					GPIO_Pin_3
+#define LCD_DC_GPIO_PORT				GPIOD
+#define LCD_DC_GPIO_PIN					GPIO_Pin_5
 				
-#define LCD_CS_GPIO_PORT				GPIOA
-#define LCD_CS_GPIO_PIN					GPIO_Pin_4
+#define LCD_CS_GPIO_PORT				GPIOD
+#define LCD_CS_GPIO_PIN					GPIO_Pin_6
  
-#define LCD_BLK_GPIO_PORT				GPIOA
-#define LCD_BLK_GPIO_PIN				GPIO_Pin_5
+#define LCD_BLK_GPIO_PORT				GPIOD
+#define LCD_BLK_GPIO_PIN				GPIO_Pin_7
  
 /*********************END**********************/
  
@@ -110,7 +110,7 @@ void LCD_ShowIntNum(u16 x,u16 y,u16 num,u8 len,u16 fc,u16 bc,u8 sizey);//œ‘ æ’˚ 
 void LCD_ShowFloatNum1(u16 x,u16 y,float num,u8 len,u16 fc,u16 bc,u8 sizey);//œ‘ æ¡ΩŒª–° ˝±‰¡ø
  
 void LCD_ShowPicture(u16 x,u16 y,u16 length,u16 width,const u8 pic[]);//œ‘ æÕº∆¨
- 
+void NO_Show(void);
  
 #endif
 

@@ -15,14 +15,14 @@
  * CSDN			:	辰哥单片机设计
  * 作者			:	辰哥 
 **********************BEGIN***********************/
- 
+extern volatile int8_t color[6];
  
 void LCD_GPIO_Init(void)
 {
 	    GPIO_InitTypeDef GPIO_InitStructure;
 
 		// 使能GPIOA时钟
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 
 		// 配置GPIO为推挽输出
 		GPIO_InitStructure.GPIO_Pin = LCD_SCL_GPIO_PIN|LCD_SDA_GPIO_PIN|LCD_RST_GPIO_PIN|LCD_DC_GPIO_PIN|LCD_CS_GPIO_PIN|LCD_BLK_GPIO_PIN;
@@ -30,7 +30,7 @@ void LCD_GPIO_Init(void)
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-		GPIO_Init(GPIOA, &GPIO_InitStructure);
+		GPIO_Init(GPIOD, &GPIO_InitStructure);
 	    // 设置所有GPIO为高电平
 		GPIO_SetBits(LCD_SCL_GPIO_PORT,LCD_SCL_GPIO_PIN|LCD_SDA_GPIO_PIN|LCD_RST_GPIO_PIN|LCD_DC_GPIO_PIN|LCD_CS_GPIO_PIN|LCD_BLK_GPIO_PIN);
 }
@@ -154,16 +154,16 @@ void LCD_Init(void)
 	LCD_GPIO_Init();//初始化GPIO
 	
 	LCD_RES_Clr();//复位
-	delay_ms(100);
+	Delay_ms(100);
 	LCD_RES_Set();
-	delay_ms(100);
+	Delay_ms(100);
 	
 	LCD_BLK_Set();//打开背光
-  delay_ms(100);
+	Delay_ms(100);
 	
 	//************* Start Initial Sequence **********//
 	LCD_WR_REG(0x11); //Sleep out 
-	delay_ms(120);              //Delay 120ms 
+	Delay_ms(120);              //Delay 120ms 
 	//------------------------------------ST7735S Frame Rate-----------------------------------------// 
 	LCD_WR_REG(0xB1); 
 	LCD_WR_DATA8(0x05); 
@@ -644,6 +644,14 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode)
 	sizex=sizey/2;
 	TypefaceNum=(sizex/8+((sizex%8)?1:0))*sizey;
 	num=num-' ';    //得到偏移后的值
+	if(sizey==48||sizey==64)
+    {
+        num-=16;
+        if(num==240)
+            num=10;
+        if(num==251)
+            num=11;
+    }
 	LCD_Address_Set(x,y,x+sizex-1,y+sizey-1);  //设置光标位置 
 	for(i=0;i<TypefaceNum;i++)
 	{ 
@@ -651,6 +659,8 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode)
 		else if(sizey==16)temp=ascii_1608[num][i];		 //调用8x16字体
 		else if(sizey==24)temp=ascii_2412[num][i];		 //调用12x24字体
 		else if(sizey==32)temp=ascii_3216[num][i];		 //调用16x32字体
+		else if(sizey==48)temp=ascii_48[num][i];		 //调用16x32字体
+		else if(sizey==64)temp=ascii_64[num][i];		 //调用16x32字体
 		else return;
 		for(t=0;t<8;t++)
 		{
@@ -679,6 +689,8 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode)
 		}
 	}   	 	  
 }
+
+
  
  
 /******************************************************************************
@@ -799,4 +811,16 @@ void LCD_ShowPicture(u16 x,u16 y,u16 length,u16 width,const u8 pic[])
 			k++;
 		}
 	}			
+}
+
+void NO_Show(void)
+{
+	LCD_ShowIntNum(0,0,color[0],1,WHITE,BLACK,64);
+	LCD_ShowIntNum(47,0,color[1],1,WHITE,BLACK,64);
+	LCD_ShowIntNum(95,0,color[2],1,WHITE,BLACK,64);
+	LCD_DrawLine(65,65,65,160,WHITE);
+	LCD_DrawLine(50,82,80,82,WHITE);
+	LCD_ShowIntNum(0,100,color[3],1,WHITE,BLACK,64);
+	LCD_ShowIntNum(47,100,color[4],1,WHITE,BLACK,64);
+	LCD_ShowIntNum(95,100,color[5],1,WHITE,BLACK,64);
 }
